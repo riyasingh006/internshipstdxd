@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>E-Commerce Website</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet"/>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(145deg, #1e1e2f, #3b3b58);
+      background-attachment: fixed;
+      background-size: cover;
+      color: #fff;
+    }
+
+    header, footer {
+      background: linear-gradient(145deg, #0c5cbe, #083a82);
+      color: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      color: white;
+      margin: 0 10px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s, text-shadow 0.3s;
+    }
+
+    nav a:hover {
+      text-shadow: 0 0 8px #ffffffaa;
+      color: #ffeb3b;
+    }
+
+    .container {
+      padding: 10px 20px;
+    }
+
+    .card {
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 1rem;
+      margin: 10px;
+      text-align: center;
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 10px rgba(255, 255, 255, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      animation: fadeInUp 0.8s ease-in-out both;
+    }
+
+    .card:hover {
+      transform: rotateX(5deg) rotateY(5deg) scale(1.05);
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.6), 0 0 12px rgba(255, 255, 255, 0.2);
+    }
+
+    .card img {
+      width: 150px;
+      max-height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    #product-view .card img {
+      max-width: 300px;
+      height: auto;
+      object-fit: contain;
+      display: block;
+      margin: auto;
+    }
+
+    .flex {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .slider {
+      background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+        url('https://images.unsplash.com/photo-1567306226416-28f0efdc88ce') no-repeat center/cover;
+      height: 100px;
+      border-radius: 10px;
+      margin-bottom: 40px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 32px;
+      color: #ffeb3b;
+      margin: 40px 0 20px;
+      text-shadow: 0 0 10px #ffeb3b, 0 0 20px #ffeb3b;
+      animation: fadeInUp 0.8s ease-in-out both;
+    }
+
+    #scrollBtn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      display: none;
+      background: #ff4081;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 100%;
+      font-size: 18px;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(255, 64, 129, 0.6);
+    }
+
+    input, textarea, button, select {
+      width: 100%;
+      margin: 0.5rem 0;
+      padding: 10px;
+      border: 1px solid #999;
+      border-radius: 5px;
+      font-size: 16px;
+      background-color: #1f1f2f;
+      color: white;
+    }
+
+    button {
+      background-color: #ff4081;
+      color: white;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 12px #ff4081, 0 0 20px #ff4081;
+      transition: all 0.3s ease-in-out;
+    }
+
+    button:hover {
+      background-color: #ff1a6b;
+      box-shadow: 0 0 18px #ff1a6b, 0 0 30px #ff1a6b;
+      transform: translateY(-2px);
+    }
+
+    footer p {
+      margin: 0;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .filters {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+
+    .filters label {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+    }
+
+    .product-grid .card img {
+      width: 100%;
+      max-width: 200px;
+      height: auto;
+      object-fit: contain;
+      display: block;
+      margin: auto;
+      border-radius: 8px;
+    }
+
+    /* Animation */
+    @keyframes fadeInUp {
+      0% {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <script>
+    // Scroll-to-top button
+    const scrollBtn = document.getElementById("scrollBtn");
+    window.onscroll = function () {
+      scrollBtn.style.display = window.scrollY > 300 ? "block" : "none";
+    };
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    // 3D tilt effect
+    document.querySelectorAll('.card').forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const rotateX = -(y - centerY) / 20;
+        const rotateY = (x - centerX) / 20;
+        card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'rotateX(0) rotateY(0) scale(1)';
+      });
+    });
+  </script>
+
+</body>
+</html>
+
+
+<header>
+  <nav>
+    <strong style="font-size: 24px;">Riance</strong>
+    <div>
+      <a href="#home">Home</a>
+      <a href="#products">Products</a>
+      <a href="#cart">Cart</a>
+      <a href="#checkout">Checkout</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+      <a href="#search">Search</a>
+      <a href="#feedback">feedback</a>
+    </div>
+  </nav>
+<div style="margin-top: 10px;"><a href="#login" style="color: #fff; text-decoration: underline;">Login/Register</a></div>
+</header>
+
+<!-- Login/Register Section -->
+<section id="login" class="container">
+  <h2 class="section-title">Login or Register</h2>
+  <div class="flex">
+    <div class="card" style="max-width: 400px;">
+      <h3>Login</h3>
+      <form id="loginForm">
+        <input type="text" id="loginUsername" placeholder="Username" required>
+        <input type="password" id="loginPassword" placeholder="Password" required>
+        <button type="submit">Login</button>
+        <p id="loginMessage"></p>
+      </form>
+    </div>
+    <div class="card" style="max-width: 400px;">
+      <h3>Register</h3>
+      <form id="registerForm">
+        <input type="text" id="registerUsername" placeholder="Username" required>
+        <input type="password" id="registerPassword" placeholder="Password" required>
+        <button type="submit">Register</button>
+        <p id="registerMessage"></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- Home Section -->
+<section id="home" class="container">
+  <div class="slider"></div>
+  <h2 class="section-title">Shop by Category</h2>
+  <div class="flex">
+    <div class="card">Electronics</div>
+    <div class="card">Fashion</div>
+    <div class="card">Home & Kitchen</div>
+  </div>
+  <h2 class="section-title">Latest Products</h2>
+  <div class="product-grid">
+    <div class="card"><img src="" alt="Product"><p>Smartphone</p><p>$299</p></div>
+    <div class="card"><img src="Product/Headphones.jpg" alt="Product"><p>Headphones</p><p>$99</p></div>
+    <div class="card"><img src="Product/Watch.webp" alt="Product"><p>Watch</p><p>$149</p></div>
+  </div>
+  <h2 class="section-title">Our Features</h2>
+  <div class="flex">
+    <div class="card">Free Shipping</div>
+    <div class="card">24/7 Support</div>
+    <div class="card">Easy Returns</div>
+  </div>
+</section>
+
+<!-- Products Section -->
+<section id="products" class="container">
+  <h2 class="section-title">All Products</h2>
+  <div class="filters">
+    <label for="category">Category Filter:</label>
+    <select id="category">
+      <option value="all">All</option>
+      <option value="electronics">Electronics</option>
+      <option value="fashion">Fashion</option>
+      <option value="home">Home & Kitchen</option>
+    </select>
+
+    <label for="priceRange">Price Range Filter:</label>
+    <select id="priceRange">
+      <option value="all">All</option>
+      <option value="0-100">$10 - $100</option>
+      <option value="100-300">$100 - $300</option>
+      <option value="300+">$300+</option>
+    </select>
+  </div>
+
+  <div class="product-grid">
+    <div class="card"><img src="Product/Laptop.jpg" alt="Product"><p>Laptop</p><p>$499</p></div>
+    <div class="card"><img src="Product/Shoes.webp" alt="Product"><p>Shoes</p><p>$79</p></div>
+    <div class="card"><img src="Product/Blender.jpg" alt="Product"><p>Blender</p><p>$89</p></div>
+    <div class="card"><img src="Product/Tablet.jpg" alt="Product"><p>Tablet</p><p>$199</p></div>
+  </div>
+</section>
+
+<!-- Product View Page -->
+<section id="product-view" class="container">
+  <h2 class="section-title">Product Title</h2>
+  <div class="card">
+    <img src="Product/Headphones.jpg" alt="Product Image">
+    <h3>Wireless Headphones</h3>
+    <p>High-quality wireless headphones with noise cancellation and long battery life.</p>
+    <p><strong>Price:</strong> $99</p>
+    <p><strong>Ratings:</strong> ⭐⭐⭐⭐☆ (4.2)</p>
+    <button>Add to Cart</button>
+  </div>
+  <h3 class="section-title">Related Products</h3>
+  <div class="product-grid">
+    <div class="card"><img src="Product/Bluetooth Speaker.webp" alt="Related"><p>Bluetooth Speaker</p><p>$49</p></div>
+    <div class="card"><img src="Product/Wireless Earbuds.jpg" alt="Related"><p>Wireless Earbuds</p><p>$59</p></div>
+  </div>
+</section>
+
+<!-- Category Page -->
+<section id="category" class="container">
+  <h2 class="section-title">Electronics</h2>
+  <div class="flex">
+    <div class="card">
+      <img src="Product/Laptop.jpg" alt="Laptop">
+      <h3>Laptop</h3>
+      <p>High performance laptop for multitasking.</p>
+    </div>
+    <div class="card">
+      <img src="Product/Smartphone.jpeg" alt="Smartphone">
+      <h3>Smartphone</h3>
+      <p>Latest model with advanced features.</p>
+    </div>
+    <div class="card">
+      <img src="Product/Headphones.jpg" alt="Headphones">
+      <h3>Headphones</h3>
+      <p>Noise cancelling over-ear headphones.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Cart Page -->
+<section id="cart" class="container">
+  <h2 class="section-title">Your Cart</h2>
+  <div class="card">
+    <img src="Product/Headphones.jpg" alt="Product">
+    <h3>Wireless Headphones</h3>
+    <p>Quantity: <input type="number" value="1" min="1"></p>
+    <p>Price: $99</p>
+    <p>Total: $99</p>
+  </div>
+  <div class="card">
+    <img src="Product/Bluetooth Speaker.webp" alt="Product">
+    <h3>Bluetooth Speaker</h3>
+    <p>Quantity: <input type="number" value="2" min="1"></p>
+    <img src="Product/Wireless Earbuds.jpg" alt="Product">
+    <h3>Earbuds</h3>
+    <p>Price: $49</p>
+    <p>Total: $98</p>
+  </div>
+  <div class="card">
+    <h3>Cart Summary</h3>
+    <p><strong>Total Amount:</strong> $197</p>
+    <button onclick="location.href='#checkout'">Proceed to Checkout</button>
+  </div>
+</section>
+
+<!-- Checkout Page -->
+<section id="checkout" class="container">
+  <h2 class="section-title">Checkout</h2>
+  <div class="card">
+    <h3>Order Summary</h3>
+    <p>Wireless Headphones - $99</p>
+    <p>Bluetooth Speaker x2 - $98</p>
+    <p><strong>Total:</strong> $197</p>
+  </div>
+  <div class="card">
+    <h3>Shipping Information</h3>
+    <form>
+      <input type="text" placeholder="Full Name" required>
+      <input type="email" placeholder="Email Address" required>
+      <input type="text" placeholder="Shipping Address" required>
+      <input type="text" placeholder="City" required>
+      <input type="text" placeholder="State" required>
+      <input type="text" placeholder="Zip Code" required>
+      <button type="submit">Place Order</button>
+    </form>
+  </div>
+</section>
+
+<!-- Order Confirmation Page -->
+<section id="order-confirmation" class="container">
+  <h2 class="section-title">Order Confirmation</h2>
+  <div class="card">
+    <h3>Thank you for your order!</h3>
+    <p>Your order has been successfully placed.</p>
+    <p><strong>Order No:</strong> #ORD123456</p>
+    <p><strong>Status:</strong> Confirmed</p>
+    <p>We’ve sent the details to your email. You’ll receive your items soon!</p>
+  </div>
+</section>
+
+<!-- Order Tracking Section -->
+<section id="order-tracking" class="container">
+  <h2 class="section-title">Track Your Order</h2>
+  <div class="card">
+    <form id="trackOrderForm">
+      <input type="text" id="orderId" placeholder="Enter Order ID" required>
+      <button type="submit">Track</button>
+    </form>
+    <p id="trackingResult"></p>
+  </div>
+</section>
+
+
+
+<!-- About Us Page -->
+<section id="about" class="container">
+  <h2 class="section-title">About Us</h2>
+  <div class="flex">
+    <div class="card">
+      <img src="Product/download (2).jpg" alt="Team">
+      <p>Welcome to Riance – your one-stop destination for all things shopping. We are committed to delivering top-notch products with a seamless online experience.</p>
+    </div>
+    <div class="card">
+      <h3>Our Features</h3>
+      <ul>
+        <li>Genuine & Quality Products</li>
+        <li>Quick Delivery & Easy Returns</li>
+        <li>24/7 Customer Support</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Testimonials</h3>
+      <p>"Amazing quality and fast delivery. Highly recommend!" - Priya S.</p>
+      <p>"Shopping experience was smooth and customer service is top-notch!" - Arjun M.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Contact Us Page -->
+<section id="contact" class="container">
+  <h2 class="section-title">Contact Us</h2>
+  <div class="card">
+    <p>Email: support@riance.com</p>
+    <p>Phone: +91-982789521</p>
+    <form id="contactForm">
+      <input type="text" id="name" placeholder="Your Name" required>
+      <input type="email" id="email" placeholder="Your Email" required>
+      <textarea id="message" placeholder="Your Message" required></textarea>
+      <button type="submit">Submit</button>
+    </form>
+    <p id="formMessage"></p>
+  </div>
+</section>
+
+<!-- Search Page -->
+<section id="search" class="container">
+  <h2 class="section-title">Search Products</h2>
+  <input type="text" id="searchInput" placeholder="Search for products...">
+  <div class="product-grid" id="searchResults">
+    <div class="card"><img src="Product/wireless mouse.webp" alt="Search Result"><p>Wireless Mouse</p><p>$25</p></div>
+    <div class="card"><img src="Product/itness Tracker.jpg" alt="Search Result"><p>Fitness Tracker</p><p>$59</p></div>
+  </div>
+</section>
+
+<!-- Feedback Section -->
+<section id="feedback" class="container">
+  <h2 class="section-title">Feedback</h2>
+  <div class="card">
+    <form id="feedbackForm">
+      <input type="text" id="feedbackName" placeholder="Your Name" required>
+      <input type="email" id="feedbackEmail" placeholder="Your Email" required>
+      <textarea id="feedbackMessage" placeholder="Your Feedback" required></textarea>
+      <button type="submit">Submit Feedback</button>
+    </form>
+    <p id="feedbackMessageResult"></p>
+  </div>
+</section>
+
+<script>
+  // Order Tracking Handler
+  document.getElementById("trackOrderForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+    const orderId = document.getElementById("orderId").value;
+    const result = document.getElementById("trackingResult");
+
+    // Dummy status simulation
+    if (orderId === "ORD123456") {
+      result.textContent = "Order #ORD123456 is Shipped and on the way!";
+      result.style.color = 'green';
+    } else {
+      result.textContent = "Order ID not found. Please try again.";
+      result.style.color = 'red';
+    }
+  });
+
+  // Feedback Form Handler
+  document.getElementById("feedbackForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+    const name = document.getElementById("feedbackName").value;
+    const email = document.getElementById("feedbackEmail").value;
+    const message = document.getElementById("feedbackMessage").value;
+    const result = document.getElementById("feedbackMessageResult");
+
+    if (name && email && message) {
+      result.textContent = "Thank you for your feedback, " + name + "!";
+      result.style.color = 'green';
+    } else {
+      result.textContent = "Please fill in all fields.";
+      result.style.color = 'red';
+    }
+  });
+</script>
+
+
+<!-- Scroll to Top Button -->
+<button id="scrollBtn" onclick="scrollToTop()"><i class="fa fa-arrow-up"></i></button>
+
+<!-- Contact Form Validation -->
+<script>
+  window.onscroll = () => {
+    const btn = document.getElementById("scrollBtn");
+    btn.style.display = window.scrollY > 200 ? "block" : "none";
+  };
+  function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  document.getElementById("contactForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const message = document.getElementById("message").value;
+    const formMessage = document.getElementById("formMessage");
+
+    if (name && email && message) {
+      formMessage.textContent = "Thank you for contacting us! We'll get back to you soon.";
+      formMessage.style.color = 'green';
+    } else {
+      formMessage.textContent = "Please fill in all fields.";
+      formMessage.style.color = 'red';
+    }
+  });
+</script>
+
+<script>
+  // Login/Register Script using LocalStorage
+  const loginForm = document.getElementById("loginForm");
+  const registerForm = document.getElementById("registerForm");
+
+  loginForm.addEventListener("submit", function(e) {
+    e.preventDefault();
+    const username = document.getElementById("loginUsername").value;
+    const password = document.getElementById("loginPassword").value;
+    const storedUser = localStorage.getItem("user");
+
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      if (user.username === username && user.password === password) {
+        document.getElementById("loginMessage").textContent = `Welcome, ${username}!`;
+        document.getElementById("loginMessage").style.color = 'green';
+      } else {
+        document.getElementById("loginMessage").textContent = "Incorrect username or password.";
+        document.getElementById("loginMessage").style.color = 'red';
+      }
+    } else {
+      document.getElementById("loginMessage").textContent = "No user found. Please register.";
+      document.getElementById("loginMessage").style.color = 'orange';
+    }
+  });
+
+  registerForm.addEventListener("submit", function(e) {
+    e.preventDefault();
+    const username = document.getElementById("registerUsername").value;
+    const password = document.getElementById("registerPassword").value;
+    localStorage.setItem("user", JSON.stringify({ username, password }));
+    document.getElementById("registerMessage").textContent = "Registered successfully! You can now log in.";
+    document.getElementById("registerMessage").style.color = 'green';
+  });
+</script>
+
+<!-- Scroll Script -->
+<script>
+  window.onscroll = () => {
+    const btn = document.getElementById("scrollBtn");
+    btn.style.display = window.scrollY > 200 ? "block" : "none";
+  };
+  function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>
